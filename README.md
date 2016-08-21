@@ -12,5 +12,5 @@ library(devtools)
 ```
 use this command to install spatialClust package
 ```R
-install_github("kbroman/broman")
+install_github("imamhabib/spatialClust")
 ```
