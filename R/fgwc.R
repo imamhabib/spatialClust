@@ -3,13 +3,14 @@
 #' @description This function used to perform Fuzzy Geographically Weighted Clustering of X dataset.
 #'
 #' @param X data frame n x p
+#' @param population dataset 1 x n number of population each region (row)
+#' @param distance shapefile or distance matrik n x n
 #' @param K specific number of cluster (must be >1)
 #' @param m fuzzifier / degree of fuzziness
+#' @param beta proportion of geographically effect (if 0 equal Fuzzy C-Means)
 #' @param max.iteration maximum iteration to convergence
 #' @param threshold threshold of convergence
 #' @param RandomNumber specific seed
-#' @param population dataset 1 x n number of population each region (row)
-#' @param distance shapefile or distance matrik n x n
 #'
 #' @return func.obj objective function that calculated.
 #' @return U matrix n x K consist fuzzy membership matrix
@@ -36,19 +37,21 @@
 #' @export
 #'
 
-fgwc<- function(X,K=2,m=2,alfa,beta,a,b,max.iteration=100,threshold=10^-5,
-                    RandomNumber=0,population,distance) {
+fgwc<- function(X,population,distance,K=2,m=2,beta=0.5,a=1,b=1,max.iteration=100,threshold=10^-5,
+                    RandomNumber=0) {
   ## Set data
   data.X <- as.matrix(X)
+  population <- as.matrix(population)
   n <- nrow(data.X)
   p <- ncol(data.X)
+  alfa <- 1- beta
 
   if(is.matrix(distance)){
-    distance <- distance
+    distance <- as.matrix(distance)
   }else{
     library(rgeos)
-    centroid <- gCentroid(petaIndo,byid = T)
-    distance <- as.matrix(spDists(centroidJawa, longlat=T))
+    centroid <- gCentroid(distance,byid = T)
+    distance <- as.matrix(spDists(centroid, longlat=T))
   }
 
   ##Initiation Parameter##
@@ -160,9 +163,10 @@ fgwc<- function(X,K=2,m=2,alfa,beta,a,b,max.iteration=100,threshold=10^-5,
   result$V <- V.opt
   result$D <- D.opt
   result$m <- m
+  result$data <- data.X
   result$call<-match.call()
   result$Clust.desc <- Clust.desc
-  class(result)<-"fuzzyclust"
+  class(result)<-"fgwc"
   print(result)
   return(result)
 }
