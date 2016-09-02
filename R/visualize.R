@@ -8,10 +8,53 @@
 #' @return radarPlot
 #' @return clusterMap
 #'
+#' @examples
+#' #load data example
+#' X <- example
+#'
+#' #if using matrix distance
+#' #distance <- dist
+#'
+#' #if using shapefile
+#' #library(rgdal) for call readOGR
+#' #distance <- readOGR(dsn = 'folder/.',"shapefile name")
+#' distance <- map
+#'
+#' #load population data
+#' pop <- population
+#'
+#' clust <- fgwc(X,pop,distance,K=2,m=1.5,beta=0.5)
+#'
+#' #cluster visualization
+#' \donttest{
+#' visualize(clust)
+#' }
+#'
+#' @seealso  \code{\link{spClustIndex}} for cluser validation,
+#' \code{\link{scale}} for data scalling
+#'
+#' @import rgeos
+#' @import ggplot2
+#' @import maptools
+#' @import sp
 #' @export
 
 visualize <- function(fgwc){
-  library(ggplot2)
+  if (!requireNamespace("ggplot2", quietly = TRUE)) {
+    stop("ggplot2 needed for this function to work. Please install it.",
+         call. = FALSE)
+  }
+
+  if (!requireNamespace("sp", quietly = TRUE)) {
+    stop("sp needed for this function to work. Please install it.",
+         call. = FALSE)
+  }
+
+  if (!requireNamespace("maptools", quietly = TRUE)) {
+    stop("maptools needed for this function to work. Please install it.",
+         call. = FALSE)
+  }
+
   result <- list()
   map <- NULL
 
@@ -41,6 +84,8 @@ visualize <- function(fgwc){
 
 biPlot <- function(PC,clust,rowname, x="PC1", y="PC2") {
 
+  V1 <- V2 <- PC1 <- PC2 <- varnames <- NULL
+
   # PC being a prcomp object
   data <- data.frame(obsnames=rowname, PC$x)
   clust <- as.character(clust)
@@ -63,8 +108,12 @@ biPlot <- function(PC,clust,rowname, x="PC1", y="PC2") {
 }
 
 clustMap <- function(map,cluster,rowname){
-  library(sp)
-  library(maptools)
+  if (!requireNamespace("ggplot2", quietly = TRUE)) {
+    stop("ggplot2 needed for this function to work. Please install it.",
+         call. = FALSE)
+  }
+
+  Longitude <- Latitude <- NULL
   #Map
   reg2 <- map
   proj4string(reg2) <- CRS("+init=epsg:4238")
@@ -157,6 +206,8 @@ CreateRadialPlot <- function(plot.data,
                              plot.legend=if (nrow(plot.data)>1) TRUE else FALSE,
                              legend.title="Cluster",
                              legend.text.size=grid.label.size ) {
+
+  axis.no <- x <- y <- NULL
 
   var.names <- colnames(plot.data)[-1]  #'Short version of variable names
   #axis.labels [if supplied] is designed to hold 'long version' of variable names

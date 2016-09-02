@@ -20,6 +20,10 @@ fgwc(X, population, distance, K = 2, m = 2, beta = 0.5, a = 1, b = 1,
 
 \item{beta}{proportion of geographically effect (if 0 equal Fuzzy C-Means)}
 
+\item{a}{power for increase population effect}
+
+\item{b}{power for increase distance effect}
+
 \item{max.iteration}{maximum iteration to convergence}
 
 \item{threshold}{threshold of convergence}
@@ -55,9 +59,31 @@ Centroid or cluster center can be use to interpret the cluster. Both membership 
 calculating mathematical distance. Fuzzy Geographically Weighted Clustering calculate distance with Euclideans norm. So it can be said that cluster
 will have sperichal shape of geometry.
 }
+\examples{
+#load data example
+X <- example
+
+#if using matrix distance
+distance <- dist
+
+#if using shapefile
+#library(rgdal) for call readOGR
+#distance <- readOGR(dsn = 'folder/.',"shapefile name")
+
+#load population data
+pop <- population
+
+clust <- fgwc(X,pop,distance,K=2,m=1.5,beta=0.5)
+
+}
 \references{
 G. A. Mason and R. D. Jacobson.(2007). Fuzzy Geographically Weighted Clustering, in Proceedings of the 9th International Conference on Geocomputation, no. 1998, pp. 1-7
 
 Bezdek, J. C., Ehrlich, R., & Full, W. (1984). FCM: The Fuzzy C-Means Clustering Algorithm. Computers and Geosciences Vol 10, 191-203
+}
+\seealso{
+\code{\link{fgwc.gsa}} for optimize using Gravitational Search Algorithm,
+\code{\link{spClustIndex}} for cluser validation,
+\code{\link{visualize}} for cluster visualizatiion
 }
 
