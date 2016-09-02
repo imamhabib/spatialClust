@@ -1,5 +1,6 @@
 # spatialClust
-spatialClust is a R-Package that provide Spatial Clustering using Fuzzy Geographically Weighted Clustering
+spatialClust is a R-Package that provide Spatial Clustering using Fuzzy Geographically Weighted Clustering. 
+This package also provide optimiztion using Gravtational Search Algorithm
 
 #Installation
 Before install this package, install devtools first
